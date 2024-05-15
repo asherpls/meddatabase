@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "659444690781",
+    "project_id": "med-database-e58c4",
+    "storage_bucket": "med-database-e58c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:659444690781:android:a8678d481dc17e664dc2b4",
+        "android_client_info": {
+          "package_name": "com.example.meddatabase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCd8d7FH-3BiCInD9zxg69sB6iJXF9iwEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
