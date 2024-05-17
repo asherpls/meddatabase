@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,7 +16,7 @@ import androidx.compose.ui.unit.sp
 fun CustomButton(text: String, clickButton: () -> Unit, icon: ImageVector?) {
     Button(
         onClick = clickButton,
-        shape = RoundedCornerShape(10.dp),
+        shape = RoundedCornerShape(20.dp),
         modifier = Modifier.padding(horizontal = 10.dp).testTag("Test".plus(text))
     ) {
         if (icon != null) {

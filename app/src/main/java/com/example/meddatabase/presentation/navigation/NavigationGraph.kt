@@ -32,7 +32,7 @@ sealed class NavScreen(var icon:Int, var route:String){
     data object Exit: NavScreen(R.drawable.logout, "Logout")
     data object Login: NavScreen(R.drawable.home, "Login")
     data object SignUp: NavScreen(R.drawable.home, "SignUp")
-    data object Stats: NavScreen(R.drawable.calendar, "Stats")
+    data object Stats: NavScreen(R.drawable.search, "Search")
 }
 
 @Composable
@@ -78,7 +78,10 @@ fun NavigationGraph(
         composable(NavScreen.Stats.route) {
             StatScreen(
                 onClickToHome ={navController.navigate("home")},
-                navController=navController)
+                navController=navController,
+                onIndexChange = {
+                    Log.v("OK","index change event called")
+                })
         }
 
         composable(NavScreen.Add.route) {

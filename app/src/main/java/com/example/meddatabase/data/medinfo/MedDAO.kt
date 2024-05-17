@@ -5,6 +5,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.childEvents
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -34,14 +35,46 @@ class MedDAO(private val database: DatabaseReference) {
         awaitClose { close() }
     }
 
+    suspend fun getEntireDatabase() : Flow<DatabaseResult<List<MedInfo?>>> = callbackFlow {
+        trySend(DatabaseResult.Loading)
+        database.keepSynced(true)
 
-    fun insert(newMedInfo: MedInfo, userAuthUUID: String) = database.child(userAuthUUID).child(UUID.randomUUID().toString()).setValue(newMedInfo)
-
-    fun update(editMed: MedInfo, userAuthUUID: String) {
-        val contactId = editMed.id.toString() //retrieved for sub folder key
-        editMed.id = String() //Clear so not saved inside folder
-        database.child(userAuthUUID).child(contactId).setValue(editMed)
+        val event = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val medInfos = ArrayList<MedInfo>()
+                for (childSnapshot in snapshot.children) {
+                    val medicine = childSnapshot.getValue(MedInfo::class.java)
+                    medicine!!.id = childSnapshot.key.toString()
+                    medInfos.add(medicine)
+                }
+                trySend(DatabaseResult.Success(medInfos))
+            }
+            override fun onCancelled(error: DatabaseError) {
+                trySend(DatabaseResult.Error(Throwable(error.message)))
+            }
+        }
+        database.child("all_user").addValueEventListener(event)
+        awaitClose { close() }
     }
 
-    fun delete(medI: MedInfo) = database.child(medI.id.toString()).removeValue()
+
+    fun insert(newMedInfo: MedInfo, userAuthUUID: String){
+        var MedID = UUID.randomUUID().toString()
+        database.child(userAuthUUID).child(MedID).setValue(newMedInfo)
+        database.child("all_user").child(MedID).setValue(newMedInfo)
+
+    }
+
+    fun update(editMed: MedInfo, userAuthUUID: String) {
+        val medId = editMed.id.toString() //retrieved for sub folder key
+        //editMed.id = String() //Clear so not saved inside folder
+        database.child(userAuthUUID).child(medId).setValue(editMed)
+        database.child("all_user").child(medId).setValue(editMed)
+
+    }
+
+    fun delete(medI: MedInfo) {
+        database.child(medI.id.toString()).removeValue()
+        database.child(medI.id.toString()).removeValue()
+    }
 }

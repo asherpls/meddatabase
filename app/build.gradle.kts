@@ -51,6 +51,8 @@ android {
 }
 
 dependencies {
+    //font
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.7")
 
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))

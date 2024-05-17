@@ -3,7 +3,9 @@ package com.example.meddatabase.presentation.screens.view_delete
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -45,6 +47,7 @@ import com.example.meddatabase.data.medinfo.MedInfo
 import com.example.meddatabase.presentation.components.BottomNavBar
 import com.example.meddatabase.presentation.utils.Util
 import androidx.compose.runtime.*
+import androidx.compose.ui.text.font.FontFamily
 import com.example.meddatabase.presentation.components.CustomButton
 import com.example.meddatabase.presentation.components.SmallSpacer
 import com.google.firebase.auth.FirebaseUser
@@ -80,11 +83,13 @@ fun HomeScreen(
             text = stringResource(R.string.home),
             textAlign = TextAlign.Center,
             fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Medium,
             color = Color.Black,
         )
-        val userState by vm.contactState.collectAsState()
+        SmallSpacer()
 
+        //List with lazy List
+        val userState by vm.contactState.collectAsState()
         if (userState.data.isNotEmpty()) //Some data to display
             LazyColumnWithSelection(
                 vm,
@@ -96,10 +101,17 @@ fun HomeScreen(
         }
         //buttons
         SmallSpacer()
-        CustomButton(text = stringResource(R.string.add), onClickToAdd,Icons.Filled.Add)
-        SmallSpacer()
-        CustomButton(text = stringResource(R.string.edit), onClickToEdit,Icons.Filled.Edit)
-        SmallSpacer()
+        Column(
+            modifier = Modifier
+                .padding(12.dp)
+                .align(alignment = Alignment.End),
+        ){
+            CustomButton(text = stringResource(R.string.add), onClickToAdd,Icons.Filled.Add)
+            SmallSpacer()
+            CustomButton(text = stringResource(R.string.edit), onClickToEdit,Icons.Filled.Edit)
+            SmallSpacer()
+        }
+
 
     }}
 
@@ -113,7 +125,9 @@ fun LazyColumnWithSelection(vm: HomeViewModel,
                             onIndexChange: (MedInfo) -> Unit){
     var selectedIndexToHighlight by remember { mutableStateOf(-1) }
 
-    LazyColumn {
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+    ) {
         itemsIndexed(vm.contactState.value.data) { index, item ->
             ItemView(
                 index = index,
@@ -126,7 +140,7 @@ fun LazyColumnWithSelection(vm: HomeViewModel,
                     vm.selectedMed = item       //for delete
                 }
             )
-            Divider(color = Color.Black, modifier = Modifier
+            Divider(color = Color.Gray, modifier = Modifier
                 .fillMaxWidth()
                 .height(1.dp))
         }
