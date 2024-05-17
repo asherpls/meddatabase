@@ -1,11 +1,10 @@
 package com.example.meddatabase.data.medinfo
 
 import com.example.meddatabase.data.DatabaseResult
-import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.flow.Flow
 
 interface MedRepo{
-    fun delete(entry: MedInfo)
+    fun delete(entry: MedInfo, userUUID: String)
 
     fun add(entry: MedInfo, userUUID: String)
 
@@ -17,7 +16,7 @@ interface MedRepo{
 }
 
 class MedRepository(private val dao: MedDAO) : MedRepo {
-    override fun delete(entry: MedInfo) {dao.delete(entry)}
+    override fun delete(entry: MedInfo, userUUID: String) {dao.delete(entry, userUUID)}
 
     override fun add(entry: MedInfo, userUUID: String){ dao.insert(entry, userUUID)}
 

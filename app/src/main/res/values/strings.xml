@@ -20,6 +20,9 @@
     //all me
     <string name="medication_hint">Medication Name</string>
     <string name="medication_error">Medication Name not appropriate</string>
+    <string name="add_hint">Enter the medicine name and details on this screen</string>
+    <string name="edit_hint">Edit medicine details on this screen. You can also delete the medicine from the database</string>
+
 
     <string name="details_hint">Medication Details</string>
     <string name="viewMeds">View meds</string>

@@ -23,6 +23,9 @@ import com.example.meddatabase.presentation.components.CustomTextField
 import com.example.meddatabase.R
 import com.example.meddatabase.presentation.components.CustomButton
 import com.example.meddatabase.presentation.components.SmallSpacer
+import com.example.meddatabase.presentation.navigation.NavScreen
+import com.example.meddatabase.presentation.screens.signup.components.SignUp
+import com.example.meddatabase.presentation.utils.Util.Companion.showMessage
 
 @Composable
 fun SignupScreen(vm: SignupViewModel = viewModel(factory =
@@ -81,4 +84,18 @@ SignupViewModel.Factory),
                 }
             }
         }
-    )}
+    )
+
+    SignUp(
+        vm = vm,
+        sendEmailVerification = {
+            vm.sendEmailVerification()
+        },
+        showVerifyEmailMessage = {
+            showMessage(context, "Confirm details via email")
+        },
+        showFailureToSignUpMessage = {
+            showMessage(context, "Unable to create sign up due to permissions")
+        }
+    )
+}

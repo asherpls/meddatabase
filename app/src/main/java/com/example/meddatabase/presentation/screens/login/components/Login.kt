@@ -21,7 +21,10 @@ fun LogIn(
                     navigateToHomeScreen()
                 }
             } else {
-                showErrorMessage("Email not authorised")
+                showErrorMessage("Email not verified")
+                LaunchedEffect(key1 = Unit) {
+                    navigateToHomeScreen()
+                }
             }
         }
 

@@ -5,7 +5,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.childEvents
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -66,15 +65,14 @@ class MedDAO(private val database: DatabaseReference) {
     }
 
     fun update(editMed: MedInfo, userAuthUUID: String) {
-        val medId = editMed.id.toString() //retrieved for sub folder key
-        //editMed.id = String() //Clear so not saved inside folder
+        val medId = editMed.id.toString()
         database.child(userAuthUUID).child(medId).setValue(editMed)
         database.child("all_user").child(medId).setValue(editMed)
 
     }
 
-    fun delete(medI: MedInfo) {
-        database.child(medI.id.toString()).removeValue()
-        database.child(medI.id.toString()).removeValue()
+    fun delete(medI: MedInfo, userAuthUUID: String) {
+        database.child(userAuthUUID).child(medI.id.toString()).removeValue()
+        database.child("all_user").child(medI.id.toString()).removeValue()
     }
 }

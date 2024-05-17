@@ -20,7 +20,7 @@ class LoginViewModel (private val repo: AuthRepo) : ViewModel() {
     var email by mutableStateOf(String())
     var password by mutableStateOf(String())
     //revisit
-    val isEmailVerified  = true
+    val isEmailVerified  = repo.currentUser?.isEmailVerified ?: false
 
     var signInResponse by
     mutableStateOf<Response<Boolean>>(Response.Startup)

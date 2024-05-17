@@ -10,8 +10,6 @@ import com.example.meddatabase.data.user.UserDAO
 import com.example.meddatabase.data.user.UserRepo
 import com.example.meddatabase.data.user.UserRepository
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 private const val CONTACT_ROOT_FOLDER = "med-database"
@@ -39,13 +37,5 @@ class AppDataContainer(private val context: Context) : AppContainer {
         userRepository = UserRepository(userDAO)
 
         authRepository = AuthRepository(FirebaseAuth.getInstance())
-    }
-
-    fun returnContextForDatabaseListener(contact: FirebaseUser?): DatabaseReference{
-        if (contact != null) {
-            return  FirebaseDatabase.getInstance(DATABASE_URL).getReference(CONTACT_ROOT_FOLDER).child(/* pathString = */
-                contact.uid)
-        };
-        return TODO("Provide the return value")
     }
 }

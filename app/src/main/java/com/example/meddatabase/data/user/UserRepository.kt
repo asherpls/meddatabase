@@ -1,7 +1,6 @@
 package com.example.meddatabase.data.user
 
 import com.example.meddatabase.data.DatabaseResult
-import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepo{

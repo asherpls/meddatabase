@@ -2,10 +2,9 @@ package com.example.meddatabase.presentation.screens.Stats
 
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -45,19 +43,14 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.meddatabase.R
-import com.example.meddatabase.data.medinfo.MedInfo
 import com.example.meddatabase.presentation.components.BottomNavBar
 import com.example.meddatabase.presentation.components.SmallSpacer
 import androidx.compose.material3.MaterialTheme
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun StatScreen(onClickToHome: () -> Unit,
-               navController: NavHostController,
+fun StatScreen(navController: NavHostController,
                vm: StatViewModel = viewModel(factory = StatViewModel.Factory),
-               onIndexChange: (MedInfo?) -> Unit
 ){
     val textState = remember { mutableStateOf(TextFieldValue("")) }
 
@@ -77,21 +70,20 @@ fun StatScreen(onClickToHome: () -> Unit,
                 text = stringResource(R.string.stats),
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.Light,
                 color = Color.Black,
             )
             SmallSpacer()
 
             // search field
             SearchView(textState)
-
             SmallSpacer()
+
             //full list
             val userState by vm.contactState.collectAsState()
             if (userState.data.isNotEmpty()) //Some data to display
                 LazyColumnWithSelection(
                     vm,
-                    onIndexChange,
                     textState
                 )
         }
@@ -102,47 +94,39 @@ fun StatScreen(onClickToHome: () -> Unit,
 @Composable
 fun LazyColumnWithSelection(
     vm: StatViewModel,
-    onIndexChange: (MedInfo) -> Unit,
     searchData: MutableState<TextFieldValue>?
 ){
     var selectedIndexToHighlight by remember { mutableStateOf(-1) }
 
-    LazyColumn {
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+    ){
         val searchedText = searchData?.value?.text
         itemsIndexed(vm.contactState.value.data) { index, item ->
-            if (searchedText.toString() in item.toString()) {
-                ItemView(
-                    index = index,
-                    item = item.toString(),
-                    selected = selectedIndexToHighlight == index,
-                    onClick = { index: Int ->
-                        selectedIndexToHighlight =
-                            index //local state for highlighting selected item
-                        onIndexChange(item!!)             //for edit
-                        vm.selectedMed = item       //for delete
-                    }
-                )
-                Divider(
-                    color = Color.Black, modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                )
+            if (item != null) {
+                if (searchedText.toString() in item.toFatString()) {
+                    ItemView(
+                        item = item.toFatString(),
+                        selected = selectedIndexToHighlight == index,
+                    )
+                    Divider(
+                        color = Color.Gray, modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun ItemView(index: Int,
-             item: String,
+fun ItemView(             item: String,
              selected: Boolean,
-             onClick: (Int) -> Unit){
+){
     Text(
         text = "$item",
         modifier = Modifier
-            .clickable {
-                onClick.invoke(index)
-            }
             .background(if (selected) MaterialTheme.colorScheme.secondary else Color.Transparent)
             .fillMaxWidth()
             .padding(10.dp)
@@ -156,10 +140,9 @@ fun SearchView(state: MutableState<TextFieldValue>) {
     TextField(
         value = state.value,
         onValueChange = { value -> state.value = value
-            Log.v("","")
         },
         modifier = Modifier.fillMaxWidth(),
-        textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
+        textStyle = TextStyle(color = Color.Black, fontSize = 18.sp),
         leadingIcon = {
             Icon(
                 Icons.Default.Search,
@@ -190,14 +173,8 @@ fun SearchView(state: MutableState<TextFieldValue>) {
         singleLine = true,
         shape = RectangleShape, // The TextFiled has rounded corners top left and right by default
         colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.White,
-            cursorColor = Color.White,
-            leadingIconColor = Color.White,
-            trailingIconColor = Color.White,
-            backgroundColor = MaterialTheme.colorScheme.primary,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent
+            cursorColor = MaterialTheme.colorScheme.primary,
+            backgroundColor = MaterialTheme.colorScheme.primaryContainer,
         )
     )
 }

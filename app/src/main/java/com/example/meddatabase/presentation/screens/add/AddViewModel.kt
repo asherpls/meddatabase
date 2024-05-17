@@ -16,14 +16,13 @@ import com.example.meddatabase.data.medinfo.MedRepo
 class AddViewModel (private val authRepo: AuthRepo, private val repo: MedRepo) : ViewModel() {
     var medName by mutableStateOf("")
     var details by mutableStateOf("")
-    var startDate by mutableStateOf(0)
-    var endDate by mutableStateOf(0)
+    var formattedDate by mutableStateOf("")
 
     fun medNameIsValid():Boolean{
         return medName.isNotBlank()
     }
     fun dateIsValid():Boolean{
-        return startDate > 0
+        return formattedDate != ""
     }
 
 
@@ -32,8 +31,7 @@ class AddViewModel (private val authRepo: AuthRepo, private val repo: MedRepo) :
             var newMedInfo = MedInfo(
                 medName,
                 details,
-                startDate,
-                endDate
+                formattedDate
             )
             repo.add(newMedInfo, authRepo.currentUser!!.uid)
             clear()
@@ -43,8 +41,7 @@ class AddViewModel (private val authRepo: AuthRepo, private val repo: MedRepo) :
     private fun clear(){
         medName =""
         details=""
-        startDate=0
-        endDate=0
+        formattedDate=""
     }
 
     // Define ViewModel factory in a companion object

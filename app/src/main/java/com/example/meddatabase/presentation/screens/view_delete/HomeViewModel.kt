@@ -1,6 +1,5 @@
 package com.example.meddatabase.presentation.screens.view_delete
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -34,7 +33,6 @@ class HomeViewModel (private val authRepo: AuthRepo, private val repo: MedRepo) 
             when(result) {
                 is DatabaseResult.Success -> {
                     _contactState.update { it.copy(data = result.data) }
-                    Log.v("yo",result.toString())
                 }
                 is DatabaseResult.Error -> {
                     _contactState.update {
