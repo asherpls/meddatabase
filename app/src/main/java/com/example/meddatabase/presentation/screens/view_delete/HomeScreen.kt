@@ -65,9 +65,6 @@ fun HomeScreen(
 
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = Unit) {//Called on launch
-        vm.setSelectedUser(selectedUser)
-    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
@@ -126,7 +123,7 @@ fun LazyColumnWithSelection(vm: HomeViewModel,
                     selectedIndexToHighlight =
                         index //local state for highlighting selected item
                     onIndexChange(item!!)             //for edit
-                    vm.selectedContact = item       //for delete
+                    vm.selectedMed = item       //for delete
                 }
             )
             Divider(color = Color.Black, modifier = Modifier

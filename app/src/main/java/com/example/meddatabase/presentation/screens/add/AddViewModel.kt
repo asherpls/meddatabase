@@ -10,10 +10,10 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.meddatabase.core.MedApplication
 import com.example.meddatabase.data.auth.AuthRepo
-import com.example.meddatabase.data.interfaces.Repo
 import com.example.meddatabase.data.medinfo.MedInfo
+import com.example.meddatabase.data.medinfo.MedRepo
 
-class AddViewModel (private val repo: Repo<MedInfo>) : ViewModel() {
+class AddViewModel (private val authRepo: AuthRepo, private val repo: MedRepo) : ViewModel() {
     var medName by mutableStateOf("")
     var details by mutableStateOf("")
     var startDate by mutableStateOf(0)
@@ -35,7 +35,7 @@ class AddViewModel (private val repo: Repo<MedInfo>) : ViewModel() {
                 startDate,
                 endDate
             )
-            repo.add(newMedInfo)
+            repo.add(newMedInfo, authRepo.currentUser!!.uid)
             clear()
         }
     }
@@ -52,6 +52,7 @@ class AddViewModel (private val repo: Repo<MedInfo>) : ViewModel() {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 AddViewModel(
+                    authRepo = MedApplication.container.authRepository,
                     repo = MedApplication.container.medRepository
                 )
             }

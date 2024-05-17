@@ -13,9 +13,8 @@ import com.example.meddatabase.core.MedApplication
 import com.example.meddatabase.data.DatabaseResult
 import com.example.meddatabase.data.DatabaseState
 import com.example.meddatabase.data.auth.AuthRepo
-import com.example.meddatabase.data.interfaces.Repo
-import com.example.meddatabase.data.interfaces.UpdateMedListener
 import com.example.meddatabase.data.medinfo.MedInfo
+import com.example.meddatabase.data.medinfo.MedRepo
 import com.example.meddatabase.presentation.screens.view_delete.HomeViewModel
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +24,7 @@ import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class EditViewModel (private val repo: Repo<MedInfo>) : ViewModel() {
+class EditViewModel (private val authRepo: AuthRepo,private val repo: MedRepo) : ViewModel() {
     var selectedInfo : MedInfo? = null
 
     var medName by mutableStateOf("")
@@ -40,42 +39,12 @@ class EditViewModel (private val repo: Repo<MedInfo>) : ViewModel() {
         details = thing?.details.toString()
     }
 
-    // from home view model
-/*    private val _contactState = MutableStateFlow(DatabaseState<MedInfo>())
-
-    fun setSelectedUser(user: FirebaseUser?, indexInt: Int){
-        val updateContactListener =  repo as UpdateMedListener
-        updateContactListener.updateUserListener(MedApplication.container.returnContextForDatabaseListener(user))
-        getMedInfo(indexInt)
-    }
-
-    private fun getMedInfo(selectedIndex: Int) = viewModelScope.launch {
-        repo.getAll().collect { result ->
-            when(result) {
-                is DatabaseResult.Success -> {
-                    _contactState.update { it.copy(data = result.data) }
-                    selectedInfo = _contactState.value.data[selectedIndex]
-                    Log.v("yo",result.toString())
-                }
-                is DatabaseResult.Error -> {
-                    _contactState.update {
-                        it.copy(errorMessage = result.exception.message!!)
-                    }
-                }
-                is DatabaseResult.Loading -> {
-                    _contactState.update { it.copy(isLoading = true) }
-                }
-
-                else -> {}
-            }
-        }
-    }*/
 
     fun updateMedInfo(thing: MedInfo?){
         selectedInfo = thing!!
         selectedInfo!!.medName = medName
         selectedInfo!!.details = details
-        repo.edit(selectedInfo!!)
+        repo.edit(selectedInfo!!, authRepo.currentUser!!.uid)
     }
 
     fun deleteMedInfo(thing: MedInfo?){
@@ -88,6 +57,7 @@ class EditViewModel (private val repo: Repo<MedInfo>) : ViewModel() {
         val Factory: ViewModelProvider.Factory= viewModelFactory() {
             initializer {
                 EditViewModel(
+                    authRepo = MedApplication.container.authRepository,
                     repo = MedApplication.container.medRepository
                 )
             }

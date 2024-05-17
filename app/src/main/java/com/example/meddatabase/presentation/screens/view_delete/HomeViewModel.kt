@@ -9,32 +9,28 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.meddatabase.core.MedApplication
 import com.example.meddatabase.data.DatabaseResult
 import com.example.meddatabase.data.DatabaseState
-import com.example.meddatabase.data.interfaces.Repo
-import com.example.meddatabase.data.interfaces.UpdateMedListener
+import com.example.meddatabase.data.auth.AuthRepo
 import com.example.meddatabase.data.medinfo.MedInfo
-import com.example.meddatabase.data.user.User
-import com.google.firebase.auth.FirebaseUser
+import com.example.meddatabase.data.medinfo.MedRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HomeViewModel (private val repo: Repo<MedInfo>) : ViewModel() {
-    var selectedContact : MedInfo? = null
+class HomeViewModel (private val authRepo: AuthRepo, private val repo: MedRepo) : ViewModel() {
+    var selectedMed : MedInfo? = null
     private val _contactState = MutableStateFlow(DatabaseState<MedInfo>())
     val contactState: StateFlow<DatabaseState<MedInfo>> = _contactState.asStateFlow()//Monitored by component for recomposition on change
 
-    fun contactHasBeenSelected(): Boolean = contactState!=null
-
-    fun setSelectedUser(user: FirebaseUser?){
-        val updateContactListener =  repo as UpdateMedListener
-        updateContactListener.updateUserListener(MedApplication.container.returnContextForDatabaseListener(user))
-        getMedInfo()
+    init {
+        getMedInfo(authRepo.currentUser!!.uid)
     }
+    fun contactHasBeenSelected(): Boolean = selectedMed!=null
 
-    private fun getMedInfo() = viewModelScope.launch {
-        repo.getAll().collect { result ->
+
+    private fun getMedInfo(userId: String) = viewModelScope.launch {
+        repo.getAll(userId).collect { result ->
             when(result) {
                 is DatabaseResult.Success -> {
                     _contactState.update { it.copy(data = result.data) }
@@ -58,6 +54,7 @@ class HomeViewModel (private val repo: Repo<MedInfo>) : ViewModel() {
         val Factory: ViewModelProvider.Factory= viewModelFactory() {
             initializer {
                 HomeViewModel(
+                    authRepo = MedApplication.container.authRepository,
                     repo = MedApplication.container.medRepository
                 )
             }

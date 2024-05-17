@@ -10,40 +10,38 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import java.util.*
 
-class MedDAO() {
-    private var event: ValueEventListener?=null;
-    private lateinit var medDatabaseRoot :DatabaseReference
-
-    fun updateMedListener(contactToListenTo: DatabaseReference){
-        this.medDatabaseRoot = contactToListenTo
-    }
-
-    suspend fun getMedInfo() : Flow<DatabaseResult<List<MedInfo?>>> = callbackFlow {
+class MedDAO(private val database: DatabaseReference) {
+    suspend fun getMedInfo(userUUID: String) : Flow<DatabaseResult<List<MedInfo?>>> = callbackFlow {
         trySend(DatabaseResult.Loading)
-        medDatabaseRoot.keepSynced(true)
+        database.child(userUUID).keepSynced(true)
 
         val event = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val medInformation = ArrayList<MedInfo>()
+                val medInfos = ArrayList<MedInfo>()
                 for (childSnapshot in snapshot.children) {
-                    val medInfo = childSnapshot.getValue(MedInfo::class.java)
-                    medInfo!!.id = childSnapshot.key.toString()
-                    medInformation.add(medInfo)
+                    val medicine = childSnapshot.getValue(MedInfo::class.java)
+                    medicine!!.id = childSnapshot.key.toString()
+                    medInfos.add(medicine)
                 }
-                trySend(DatabaseResult.Success(medInformation))
+                trySend(DatabaseResult.Success(medInfos))
             }
 
             override fun onCancelled(error: DatabaseError) {
                 trySend(DatabaseResult.Error(Throwable(error.message)))
             }
         }
-        medDatabaseRoot.addValueEventListener(event)
+        database.child(userUUID).addValueEventListener(event)
         awaitClose { close() }
     }
 
-    fun insert(newMedInfo: MedInfo) = medDatabaseRoot.child(UUID.randomUUID().toString()).setValue(newMedInfo)
 
-    fun update(editMedInfo: MedInfo) = medDatabaseRoot.child(editMedInfo.id.toString()).setValue(editMedInfo)
+    fun insert(newMedInfo: MedInfo, userAuthUUID: String) = database.child(userAuthUUID).child(UUID.randomUUID().toString()).setValue(newMedInfo)
 
-    fun delete(medInfo: MedInfo) = medDatabaseRoot.child(medInfo.id.toString()).removeValue()
+    fun update(editMed: MedInfo, userAuthUUID: String) {
+        val contactId = editMed.id.toString() //retrieved for sub folder key
+        editMed.id = String() //Clear so not saved inside folder
+        database.child(userAuthUUID).child(contactId).setValue(editMed)
+    }
+
+    fun delete(medI: MedInfo) = database.child(medI.id.toString()).removeValue()
 }
