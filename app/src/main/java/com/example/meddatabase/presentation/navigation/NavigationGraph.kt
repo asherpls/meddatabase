@@ -1,12 +1,6 @@
 package com.example.meddatabase.presentation.navigation
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.navigation.NavHostController
@@ -21,7 +15,6 @@ import com.example.meddatabase.presentation.screens.edit.EditScreen
 import com.example.meddatabase.presentation.screens.login.LoginScreen
 import com.example.meddatabase.presentation.screens.signup.SignupScreen
 import com.example.meddatabase.presentation.screens.view_delete.HomeScreen
-import com.google.firebase.auth.FirebaseAuth
 import kotlin.system.exitProcess
 
 
@@ -32,7 +25,7 @@ sealed class NavScreen(var icon:Int, var route:String){
     data object Exit: NavScreen(R.drawable.logout, "Logout")
     data object Login: NavScreen(R.drawable.home, "Login")
     data object SignUp: NavScreen(R.drawable.home, "SignUp")
-    data object Stats: NavScreen(R.drawable.calendar, "Stats")
+    data object Stats: NavScreen(R.drawable.search, "Search")
 }
 
 @Composable
@@ -40,28 +33,20 @@ fun NavigationGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier.testTag("TestNavGraph")
 ) {
-    //Avoid Bundle/Parcelable here - just store index of selected Contact
-    var selectedContactIndex by remember{ mutableIntStateOf(1) }
-    val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
     var selectedMedicine: MedInfo? =null
 
     NavHost(navController,
         startDestination = NavScreen.Login.route) {
         composable(NavScreen.Home.route) {
             HomeScreen(
-                selectedContactIndex,
                 {navController.navigate("add")},
                 onIndexChange = {
-                    Log.v("OK","index change event called")
                     selectedMedicine = it
                 },
                 onClickToEdit = {
                     if (selectedMedicine != null) navController.navigate("edit")
-                    else{
-                        Log.v("double","asshole")
-                }},
+                    },
                 navController = navController,
-                selectedUser = currentFirebaseUser
             );
         }
         composable(NavScreen.Login.route) {
@@ -76,9 +61,7 @@ fun NavigationGraph(
         }
 
         composable(NavScreen.Stats.route) {
-            StatScreen(
-                onClickToHome ={navController.navigate("home")},
-                navController=navController)
+            StatScreen(navController=navController)
         }
 
         composable(NavScreen.Add.route) {

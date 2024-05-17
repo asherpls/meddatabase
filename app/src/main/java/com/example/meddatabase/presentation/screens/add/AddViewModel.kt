@@ -10,20 +10,19 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.meddatabase.core.MedApplication
 import com.example.meddatabase.data.auth.AuthRepo
-import com.example.meddatabase.data.interfaces.Repo
 import com.example.meddatabase.data.medinfo.MedInfo
+import com.example.meddatabase.data.medinfo.MedRepo
 
-class AddViewModel (private val repo: Repo<MedInfo>) : ViewModel() {
+class AddViewModel (private val authRepo: AuthRepo, private val repo: MedRepo) : ViewModel() {
     var medName by mutableStateOf("")
     var details by mutableStateOf("")
-    var startDate by mutableStateOf(0)
-    var endDate by mutableStateOf(0)
+    var formattedDate by mutableStateOf("")
 
     fun medNameIsValid():Boolean{
         return medName.isNotBlank()
     }
     fun dateIsValid():Boolean{
-        return startDate > 0
+        return formattedDate != ""
     }
 
 
@@ -32,10 +31,9 @@ class AddViewModel (private val repo: Repo<MedInfo>) : ViewModel() {
             var newMedInfo = MedInfo(
                 medName,
                 details,
-                startDate,
-                endDate
+                formattedDate
             )
-            repo.add(newMedInfo)
+            repo.add(newMedInfo, authRepo.currentUser!!.uid)
             clear()
         }
     }
@@ -43,8 +41,7 @@ class AddViewModel (private val repo: Repo<MedInfo>) : ViewModel() {
     private fun clear(){
         medName =""
         details=""
-        startDate=0
-        endDate=0
+        formattedDate=""
     }
 
     // Define ViewModel factory in a companion object
@@ -52,6 +49,7 @@ class AddViewModel (private val repo: Repo<MedInfo>) : ViewModel() {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 AddViewModel(
+                    authRepo = MedApplication.container.authRepository,
                     repo = MedApplication.container.medRepository
                 )
             }

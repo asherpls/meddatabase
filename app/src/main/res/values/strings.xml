@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">meddatabase</string>
-    <string name="home">Home</string>
+    <string name="home">Your Medicine</string>
     //Buttons
     <string name="add">Add</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="stats">Statistics</string>
+    <string name="stats">Search All</string>
     //Errors
     <string name="no_selection">No item selected</string>
     <string name="id_hint">Id</string>
@@ -20,6 +20,9 @@
     //all me
     <string name="medication_hint">Medication Name</string>
     <string name="medication_error">Medication Name not appropriate</string>
+    <string name="add_hint">Enter the medicine name and details on this screen</string>
+    <string name="edit_hint">Edit medicine details on this screen. You can also delete the medicine from the database</string>
+
 
     <string name="details_hint">Medication Details</string>
     <string name="viewMeds">View meds</string>
