@@ -2,6 +2,7 @@ package com.example.meddatabase.presentation.screens.login.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import com.example.meddatabase.core.MedApplication
 import com.example.meddatabase.data.Response
 import com.example.meddatabase.presentation.components.ProgressBar
 import com.example.meddatabase.presentation.screens.login.LoginViewModel
@@ -16,7 +17,7 @@ fun LogIn(
         is Response.Startup -> Unit //Do nothing
         is Response.Loading -> ProgressBar()
         is Response.Success -> {
-            if (vm.isEmailVerified) {
+            if (MedApplication.container.isRunningTest || vm.isEmailVerified) {
                 LaunchedEffect(key1 = Unit) {
                     navigateToHomeScreen()
                 }

@@ -6,6 +6,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="stats">Search All</string>
+
     //Errors
     <string name="no_selection">No item selected</string>
     <string name="id_hint">Id</string>
@@ -17,23 +18,25 @@
     <string name="tel_no_hint">Telephone number</string>
     <string name="tel_no_error_message">Telephone number is blank</string>
 
-    //all me
+    //enter medication
     <string name="medication_hint">Medication Name</string>
     <string name="medication_error">Medication Name not appropriate</string>
     <string name="add_hint">Enter the medicine name and details on this screen</string>
     <string name="edit_hint">Edit medicine details on this screen. You can also delete the medicine from the database</string>
-
-
     <string name="details_hint">Medication Details</string>
     <string name="viewMeds">View meds</string>
     <string name="deleteConfirm">Item deleted</string>
+    <string name="date_button_hint">Set medicine Expiry Date</string>
+    <string name="date_hint">Expiry Date of Medicine</string>
 
-    <!-- LoginScreen -->
+    // LoginScreen
     <string name="email">Email</string>
     <string name="email_error_message">Please insert a valid email.</string>
     <string name="password">Password</string>
     <string name="password_error_message">Please insert a valid password</string>
-    <!-- Sign Up Screen -->
+
+    //Sign Up Screen
+    <string name="sign_up_screen_title"> Enter details to sign up</string>
     <string name="verify_email">Verify email</string>
     <string name="forgot_password">Forgot password</string>
     <string name="sign_up_button">Sign Up</string>

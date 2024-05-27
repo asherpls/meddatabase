@@ -20,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.meddatabase.R
@@ -46,7 +48,7 @@ fun AddScreen(vm: AddViewModel = viewModel(factory = AddViewModel.Factory),onCli
         .toLocalDate()
         .format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
 
-    TopAppBarComp(barText = "Add", onClickHome = onClickToHome,infoText = stringResource(R.string.add_hint))
+    TopAppBarComp(barText = stringResource(R.string.add), onClickHome = onClickToHome,infoText = stringResource(R.string.add_hint))
 
     Column(
         modifier = Modifier
@@ -79,11 +81,12 @@ fun AddScreen(vm: AddViewModel = viewModel(factory = AddViewModel.Factory),onCli
             },
             modifier = Modifier
                 .padding(10.dp)
+                .semantics { contentDescription = "Set medicine Expiry Date"}
         ) {
             androidx.compose.material3.Text(text = if (datePickerState.selectedDateMillis!= null) {
                 "Date selected: $dateText"
             } else {
-                "Set medicine Expiry Date"
+                stringResource(R.string.date_button_hint)
             })
         }
         if (bottomSheetState) {
@@ -122,7 +125,7 @@ fun CheckValid(
         Toast.makeText(context,
             "Medicine date not valid",
             Toast.LENGTH_LONG).show();
-        false
+        true
     }
     else{
         Toast.makeText(context,

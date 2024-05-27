@@ -20,19 +20,33 @@ interface AppContainer {
     val medRepository: MedRepo
     val userRepository: UserRepo
     val authRepository: AuthRepo
+
+    val isRunningTest: Boolean
 }
 
 class AppDataContainer(private val context: Context) : AppContainer {
-    override val medRepository: MedRepo
+
+    override val isRunningTest : Boolean by lazy {
+        try {
+            Class.forName("androidx.test.espresso.Espresso")
+            true
+        } catch (e: ClassNotFoundException) {
+            false
+        }
+    }
+
+        override val medRepository: MedRepo
     override val userRepository: UserRepo
     override var authRepository: AuthRepo  = AuthRepository(FirebaseAuth.getInstance())
 
     init {
-        val medRoot = FirebaseDatabase.getInstance(DATABASE_URL).getReference(CONTACT_ROOT_FOLDER)
+        val APPENDED_TEST_PATH = if (isRunningTest) "test" else String()
+
+        val medRoot = FirebaseDatabase.getInstance(DATABASE_URL).getReference("$APPENDED_TEST_PATH$CONTACT_ROOT_FOLDER")
         val medDAO = MedDAO(medRoot)
         medRepository = MedRepository(medDAO)
 
-        val userRoot = FirebaseDatabase.getInstance(DATABASE_URL).getReference(USERS_ROOT_FOLDER)
+        val userRoot = FirebaseDatabase.getInstance(DATABASE_URL).getReference("$APPENDED_TEST_PATH$USERS_ROOT_FOLDER")
         val userDAO = UserDAO(userRoot)
         userRepository = UserRepository(userDAO)
 

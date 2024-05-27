@@ -17,14 +17,14 @@ class EditViewModel (private val authRepo: AuthRepo,private val repo: MedRepo) :
 
     var medName by mutableStateOf("")
     var details by mutableStateOf("")
-    var formattedDate by mutableStateOf("")
+    var formattedDate by mutableStateOf("N/A")
 
     fun medNameIsValid():Boolean{
         return medName.isNotBlank()
     }
 
     fun dateIsValid():Boolean{
-        return formattedDate != ""
+        return formattedDate != "N/A"
     }
 
     fun startupEdit(thing: MedInfo?){
