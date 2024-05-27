@@ -6,6 +6,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -22,6 +24,7 @@ fun CustomTextField(
 ){
     Surface(modifier = Modifier.padding(10.dp)) {
         OutlinedTextField(
+            modifier = Modifier.semantics { contentDescription = hintText },
             value = text,
             onValueChange = onValueChange,
             singleLine = true,

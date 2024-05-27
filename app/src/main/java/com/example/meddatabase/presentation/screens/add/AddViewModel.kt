@@ -16,18 +16,18 @@ import com.example.meddatabase.data.medinfo.MedRepo
 class AddViewModel (private val authRepo: AuthRepo, private val repo: MedRepo) : ViewModel() {
     var medName by mutableStateOf("")
     var details by mutableStateOf("")
-    var formattedDate by mutableStateOf("")
+    var formattedDate by mutableStateOf("N/A")
 
     fun medNameIsValid():Boolean{
         return medName.isNotBlank()
     }
     fun dateIsValid():Boolean{
-        return formattedDate != ""
+        return formattedDate != "N/A"
     }
 
 
     fun addMedication(){
-        if(medNameIsValid() && dateIsValid()) {
+        if(medNameIsValid()) {
             var newMedInfo = MedInfo(
                 medName,
                 details,

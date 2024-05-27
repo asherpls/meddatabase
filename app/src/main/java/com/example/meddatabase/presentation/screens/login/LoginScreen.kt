@@ -43,7 +43,7 @@ LoginViewModel.Factory),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.dog),
+                painter = painterResource(id = R.drawable.medimg),
                 contentDescription = stringResource(id = R.string.app_name)
             )
             CustomTextField(

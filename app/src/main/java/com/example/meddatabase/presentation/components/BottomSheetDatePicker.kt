@@ -11,7 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.example.meddatabase.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,10 +28,15 @@ fun BottomSheetDatePicker(
         sheetState = sheetState,
         dragHandle = { BottomSheetDefaults.DragHandle() },
     ) {
-        DatePicker(state = state, modifier = Modifier
-            .weight(1f)
-            .padding(20.dp),  title = {
-            Text(text = "Expiry Date of Medicine")
-        },)
+        DatePicker(
+            state = state,
+            modifier = Modifier
+                .weight(1f)
+                .padding(20.dp)
+                .semantics { R.string.date_hint},
+            title = {
+                Text(text = stringResource(R.string.date_hint))
+            },
+        )
     }
 }

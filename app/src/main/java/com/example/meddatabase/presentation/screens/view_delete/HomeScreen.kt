@@ -136,7 +136,7 @@ fun ItemView(index: Int,
              item: String,
              selected: Boolean,
              onClick: (Int) -> Unit){
-    Text(
+    androidx.compose.material.Text(
         text = "$item",
         modifier = Modifier
             .clickable {
