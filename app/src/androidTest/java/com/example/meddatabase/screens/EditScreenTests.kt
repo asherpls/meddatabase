@@ -15,7 +15,7 @@ class EditScreenTests: ScreenTests() {
         `sign in`()
         //Add a contact to view
         rule.onNode(addButton).performClick()
-        `enter_a_valid_user`()
+        enter_a_valid_user()
         //select and edit the contact
         rule.onNode(listItem).performClick()
         rule.onNode(editButton).performClick()
@@ -25,19 +25,26 @@ class EditScreenTests: ScreenTests() {
     fun `check the default state of the edit screen`(){
         `go to the edit screen`()
 
-        //check all elements are present
-
         // Tidy up - Delete the contact
         rule.onNode(deleteButton).performClick()
     }
 
-    //@Test
+    @Test
     fun `edit a  the default state of the edit screen`(){
-        //`go to the edit screen`()
+        `go to the edit screen`()
 
         //enter values and click submit
+        enter_an_editted_valid_user()
+
         //check if list item shows updated values
+        rule.onNode(editedListItem).assertExists()
+        rule.onNode(editedListItem).performClick()
 
         // Tidy up - Delete the contact
+        rule.onNode(editButton).performClick()
+        rule.onNode(deleteButton).performClick()
+
+
+
     }
 }

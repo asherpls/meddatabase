@@ -1,11 +1,9 @@
 package com.example.meddatabase.screens
 
 import androidx.compose.ui.test.*
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 
 @FixMethodOrder( MethodSorters.DEFAULT)
@@ -25,7 +23,6 @@ class AddScreenTests : ScreenTests() {
         `go to the add screen`()
 
         rule.onNode(addScreenText).assertExists()
-        //Nav bar
     }
 
     @Test
@@ -33,7 +30,7 @@ class AddScreenTests : ScreenTests() {
         `go to the add screen`()
 
         //enter valid data then submit
-        `enter_a_valid_user`()
+        enter_a_valid_user()
 
         //Should be auto returned to the home screen
         rule.onNode(homeScreenText).assertExists()
@@ -49,7 +46,7 @@ class AddScreenTests : ScreenTests() {
     @Test
     fun `try to submit an invalid contact`(){
         `go to the add screen`()
-        `enter_an_invalid_user`()
+        enter_an_invalid_user()
         rule.onNode(addScreenText).assertExists()
     }
 }

@@ -1,9 +1,5 @@
 package com.example.meddatabase.screens
 
-import androidx.compose.material.BottomSheetState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.rememberDismissState
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasContentDescription
@@ -11,11 +7,6 @@ import androidx.compose.ui.test.hasNoClickAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performImeAction
-import androidx.compose.ui.test.performMouseInput
-import androidx.compose.ui.test.performMultiModalInput
-import androidx.compose.ui.test.performScrollTo
-import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performTextInput
 import com.example.meddatabase.R
 import com.example.meddatabase.core.MainActivity
@@ -39,6 +30,7 @@ open abstract class ScreenTests {
     val MEDNAME = "first1"
     val DETAILS = "surname1"
     val FORMATTEDDATE = "N/A"
+    val EDITNAME = "tester1"
 
     val VALIDUSERNAME = "ashton@bt.com"
     val VALIDPASSWORD = "asher911"
@@ -52,7 +44,9 @@ open abstract class ScreenTests {
 
     //For home screen
     val listItem = hasText("$MEDNAME [Exp: $FORMATTEDDATE]")
+    val editedListItem = hasText("$EDITNAME$MEDNAME [Exp: $FORMATTEDDATE]")
     val fullListItem = hasText("$MEDNAME $DETAILS [Exp: $FORMATTEDDATE]")
+
     lateinit var homeScreenText : SemanticsMatcher
     lateinit var forgotPasswordButton : SemanticsMatcher
     lateinit var signUpButton : SemanticsMatcher
@@ -107,7 +101,7 @@ open abstract class ScreenTests {
     }
 
     //Used by add screen + home screen creating a user before editing
-    fun `enter_a_valid_user`(){
+    fun enter_a_valid_user(){
         rule.onNode(medInfoTextField).performTextInput(MEDNAME)
         rule.onNode(detailsTextField).performTextInput(DETAILS)
         rule.onNode(dateButton).assertExists()
@@ -117,7 +111,15 @@ open abstract class ScreenTests {
         Thread.sleep(1000)
     }
 
-    fun `enter_an_invalid_user`(){
+    fun enter_an_editted_valid_user(){
+        rule.onNode(medInfoTextField).performTextInput(EDITNAME)
+        rule.onNode(dateButton).assertExists()
+
+        rule.onNode(editButton).performClick()
+        Thread.sleep(1000)
+    }
+
+    fun enter_an_invalid_user(){
         rule.onNode(medInfoTextField).performTextInput("")
         rule.onNode(detailsTextField).performTextInput("")
 
